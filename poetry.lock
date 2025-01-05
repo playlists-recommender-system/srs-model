@@ -171,6 +171,22 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-cors"
+version = "5.0.0"
+description = "A Flask extension adding a decorator for CORS support"
+optional = false
+python-versions = "*"
+groups = ["main"]
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
+files = [
+    {file = "Flask_Cors-5.0.0-py2.py3-none-any.whl", hash = "sha256:b9e307d082a9261c100d8fb0ba909eec6a228ed1b60a8315fd85f783d61910bc"},
+    {file = "flask_cors-5.0.0.tar.gz", hash = "sha256:5aadb4b950c4e93745034594d9f3ea6591f734bb3662e16e255ffbf5e89c88ef"},
+]
+
+[package.dependencies]
+Flask = ">=0.9"
+
+[[package]]
 name = "fonttools"
 version = "4.55.3"
 description = "Tools to manipulate font files"
@@ -1118,4 +1134,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9.21"
-content-hash = "dc165dbad311d826963fd2eb061e20ca160d0653f99e8bd7c933bebf2b648afa"
+content-hash = "09e8ebf6578340269925cc58a042e75d914c3af167131d789001794774edf20a"
