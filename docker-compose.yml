@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+    environment:
+      - DATASET_PATH=${DATASET_PATH}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    container_name: srs-model
+    volumes:
+      - ../datasets:/app/datasets
