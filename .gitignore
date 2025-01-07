@@ -1,0 +1,52 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env/
+.venv/
+
+# Poetry lock file (if using it for environments only)
+poetry.lock
+
+# Cache directories
+*.egg-info/
+.eggs/
+dist/
+build/
+*.log
+
+# Python-specific cache
+*.pytest_cache/
+.tox/
+.pytest_cache/
+.coverage
+*.cover
+.hypothesis/
+.cache/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Test outputs
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.pyc
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Miscellaneous
+*.env
+*.pyo
+.envrc
