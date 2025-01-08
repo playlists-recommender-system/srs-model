@@ -4,22 +4,32 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
+from model_updater import ModelUpdater
 
 load_dotenv()
 
 
 
 dataset_path = os.getenv("DATASET_PATH", "datasets/dataset.csv")
+model_path = os.getenv("MODEL_PATH", "model/")
+default_dataset_id = '2023_spotify_ds1.csv'
 app_port = os.getenv("APP_PORT")
 
 print(f"Loading dataset from {dataset_path}.")
-playlists_df  = pd.read_csv(dataset_path, low_memory=False)
+playlists_df  = pd.read_csv(os.path.join(dataset_path, default_dataset_id), low_memory=False)
+
+print(f"Loading rules from {model_path}rules.pkl.")
+if not os.path.exists(os.path.join(model_path, 'rules.pkl')):
+     print(f"Creating rules with default dataset: {model_path} {default_dataset_id}.")
+     updater = ModelUpdater()
+     updater.update_model(default_dataset_id)
+
+print(f"Loading rules from {model_path}rules.pkl.")
+with open(os.path.join(model_path, 'rules.pkl'), 'rb') as f:
+    rules = pickle.load(f)
 
 app = Flask(__name__)
 CORS(app)
-
-with open('rules.pkl', 'rb') as f:
-    rules = pickle.load(f)
 
 
 @app.route('/recommend', methods=['POST'])
@@ -43,6 +53,19 @@ def recommend():
     filtered_playlists = filtered_playlists.drop_duplicates(subset='track_uri', keep='first')
     result = filtered_playlists[['artist_name', 'track_name']].to_dict(orient='records')
     return jsonify({'recommendations': result})
+
+@app.route('/update-model', methods=['POST'])
+def update_model():
+     data = request.json
+     dataset_id = data.get('dataset_id')
+     if dataset_id == None:
+          return jsonify({'message': 'Must be sent a dataset'})
+     
+     updater = ModelUpdater()
+     updater.update_model(dataset_id)
+     return jsonify({'message' : "Model Updated Successfuly"})
+
+
 
 if __name__ == '__main__':
     print("app_port: "+str(app_port))

@@ -8,4 +8,4 @@ services:
       - "${APP_PORT}:${APP_PORT}"
     container_name: srs-model
     volumes:
-      - ../datasets:/app/datasets
+      - ../app:/app/shared
