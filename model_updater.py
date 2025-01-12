@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from mlxtend.preprocessing import TransactionEncoder
-from mlxtend.frequent_patterns import apriori, association_rules
+from mlxtend.frequent_patterns import fpgrowth, association_rules
 import pickle
 
 class ModelUpdater:
@@ -27,7 +27,7 @@ class ModelUpdater:
         return pd.DataFrame(te_ary, columns=te.columns_)
     
     def _generate_rules(self, df):
-        frequent_itemsets = apriori(df, min_support=0.05, use_colnames=True)
+        frequent_itemsets = fpgrowth(df, min_support=0.05, use_colnames=True)
         rules = association_rules(frequent_itemsets, metric='lift', min_threshold=1.0, num_itemsets=None)
         filtered_rules = rules[(rules['antecedents'].apply(len) == 1) & (rules['consequents'].apply(len) == 1)]
         return filtered_rules
