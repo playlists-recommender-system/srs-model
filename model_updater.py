@@ -27,7 +27,7 @@ class ModelUpdater:
         return pd.DataFrame(te_ary, columns=te.columns_)
     
     def _generate_rules(self, df):
-        frequent_itemsets = apriori(df, min_support=0.1, use_colnames=True)
+        frequent_itemsets = apriori(df, min_support=0.05, use_colnames=True)
         rules = association_rules(frequent_itemsets, metric='lift', min_threshold=1.0, num_itemsets=None)
         filtered_rules = rules[(rules['antecedents'].apply(len) == 1) & (rules['consequents'].apply(len) == 1)]
         return filtered_rules
