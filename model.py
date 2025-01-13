@@ -3,11 +3,13 @@ import pandas as pd
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import fpgrowth, association_rules
 import pickle
+from datetime import datetime
 
-class ModelUpdater:
+class SRSModel:
     def __init__(self):
         self.dataset_folder = os.getenv("DATASET_PATH", "./datasets")
         self.model_folder = os.getenv("MODEL_PATH", './models')
+        self.rules = None
         os.makedirs(self.model_folder, exist_ok=True)
     
     def _load_dataset(self, dataset_id):
@@ -33,9 +35,26 @@ class ModelUpdater:
         return filtered_rules
     
     def _save_rules(self, rules):
-        model_path = os.path.join(self.model_folder, "rules.pkl")
+        model_date = str(datetime.now())
+        model_version = 1
+        
+        model_path = os.path.join(self.model_folder, f"rules.pkl")
         with open(model_path, 'wb') as f:
             pickle.dump(rules, f)
+        
+        if os.path.exists(os.path.join(self.model_folder, "model_info")):       
+            with open(os.path.join(self.model_folder, "model_info"), "r") as f:
+                _info = f.read()
+                info = str(_info).split(";")
+                model_version = int(info[0]) + 1
+        with open(os.path.join(self.model_folder, "model_info"), "w") as f:
+            f.write(f"{model_version};{model_date}")
+
+        with open(model_path, 'rb') as f:
+            self.rules = pickle.load(f)
+        
+        return {"model_version": model_version, "model_date": model_date}
+
     
     def update_model(self, dataset_id):
         try:
@@ -52,9 +71,10 @@ class ModelUpdater:
             rules = self._generate_rules(df)
 
             print(f"Saving association rules...")
-            self._save_rules(rules)
+            model_data = self._save_rules(rules)
 
             print(f"Model successfully updated!")
+            return model_data
         except Exception as e:
             print(f"Faled to update model: {e}")
 
