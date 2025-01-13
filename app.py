@@ -65,6 +65,20 @@ def update_model():
      updater.update_model(dataset_id)
      return jsonify({'message' : "Model Updated Successfuly"})
 
+@app.route('/tracks', methods=['GET'])
+def get_tracks():
+     try:
+          csv_path = os.path.join(dataset_path, '2023_spotify_songs.csv')
+
+          df = pd.read_csv(csv_path)
+
+          records = df.to_dict(orient='records')
+
+          return jsonify(records), 200
+     except FileNotFoundError:
+          return jsonify({'error': f"CSV file not found"}), 404
+     except Exception as e:
+          return jsonify({'error': str(e)})
 
 
 if __name__ == '__main__':
